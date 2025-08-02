@@ -13,8 +13,8 @@ module.exports = {
    */
   insUser: async (req, res) => {
     try {
-      const { username, password } = req.body;
-      const result = await userModel.insUser(username, password);
+      const { username, password, role } = req.body;
+      const result = await userModel.insUser(username, password, role);
       res.status(201).json(result);
     } catch (error) {
       res.status(500).json({ error: error.message });

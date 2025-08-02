@@ -26,13 +26,15 @@ class UserModel {
    * 
    * @throws {Error} Lanza un error si no se completa el proceso.
    */
-  async insUser(username, password) {
+  async insUser(username, password, role) {
     try {
       if (!username || !password) {
         throw new Error('Usuario y contraseña son requeridos.');
       }
       const existing = db.prepare('SELECT * FROM user WHERE username = @username')
         .get({ username });
+
+      console.log('existing', existing);
 
       if (existing) {
         const err = new Error('El usuario ya existe.');
@@ -43,19 +45,36 @@ class UserModel {
       // Hashear contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Guardar en la base
-      const query = db.prepare(
+      // Guardar el usuario
+      const insertUser = db.prepare(
         'INSERT INTO user (username, password_hash) VALUES (@username, @hashedPassword)'
       );
-      query.run({
+      const resInsertUser = insertUser.run({
         username,
         hashedPassword,
+      });
+
+      const userId = resInsertUser.lastInsertRowid;
+
+      // Guardar el rol
+      console.log('role', role);
+      const roleQuery = db.prepare(
+        `INSERT INTO user_rol
+        (user_id, rol_id)
+        VALUES (
+          @userId,
+          (SELECT rol_id FROM rol WHERE rol_name = @role)
+        )`
+      );
+      roleQuery.run({
+        userId,
+        role
       });
 
       return { success: true, message: 'Usuario creado con éxito' };
     } catch (error) {
       console.error(error);
-      throw new Error('Error del servidor: ', error.message || 'Error al registrar el usuario');
+      throw error;
     }
   }
 
@@ -102,7 +121,7 @@ class UserModel {
       };
     } catch (error) {
       console.error(error);
-      throw new Error('Error del servidor: ', error.message || 'Error al registrar el usuario');
+      throw error;
     }
   }
 }
