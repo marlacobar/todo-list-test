@@ -71,3 +71,10 @@ input {
   background-color: #1a1a1a;
   color: rgba(255, 255, 255, 0.87);
 }
+
+.role-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 1rem;
+}

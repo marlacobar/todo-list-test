@@ -9,6 +9,9 @@ function Register() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [secondPassword, setSecondPassword] = useState('')
+
+  const [role, setRole] = useState('VIEWER_OWN');
+
   const navigate = useNavigate()
 
 
@@ -29,7 +32,8 @@ function Register() {
     }
 
     try {
-      await register(username, password);
+      const response = await register(username, password, role);
+      console.log(response.data);
       toast.success('Usuario creado exitosamente. Ahora puedes iniciar sesión.');
       setUsername('');
       setPassword('');
@@ -64,9 +68,34 @@ function Register() {
         onChange={(e) => setSecondPassword(e.target.value)}
         required
       />
+
+      <div className='role-group'>
+        <p>Selecciona tu rol:</p>
+        <label>
+          <input
+            type="radio"
+            name="role"
+            value="viewer"
+            checked={role === 'VIEWER_OWN'}
+            onChange={() => setRole('VIEWER_OWN')}
+          />
+          Usuario - solo ve sus vehículos
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="role"
+            value="admin"
+            checked={role === 'VIEWER_ALL'}
+            onChange={() => setRole('VIEWER_ALL')}
+          />
+          Administrador - ve todos los vehículos
+        </label>
+      </div>
+
       <button type="submit">Registrarse</button>
     </form>
-  )
+  );
 }
 
 export default Register
