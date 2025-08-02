@@ -1,4 +1,5 @@
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 const app = express();
@@ -10,6 +11,7 @@ const carRoute = require('./src/routes/carRoute');
 
 
 app.use(express.json());
+app.use(cookieParser());
 
 app.use(cors({
   origin: 'http://localhost:5173',

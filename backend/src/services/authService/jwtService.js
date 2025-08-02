@@ -4,8 +4,7 @@ const jwt = require('jsonwebtoken');
 // const JWT_EXPIRATION = process.env.JWT_EXPIRATION;
 const ACCESS_JWT_EXPIRATION = '15m';
 const REFRESH_JWT_EXPIRATION = '1h';
-const ACCESS_TOKEN_SECRET = 'b853065d2cea733efee3cff1865985778760bef7ab7de837b364d2dc5a0b6fc0adbb14a189668b4cb48f647a82c831350097ca61fbf8f994cd51b89851e88ae9';
-const REFRESH_TOKEN_SECRET = 'ae098dae4f4441ce311239b21964f9380c0345e407da8368787336105ffceb3222d3e76da8bbcfe73c425c707bc937e198e130dfaf8d4c613874d25b65d1115e';
+const TOKEN_SECRET = 'b853065d2cea733efee3cff1865985778760bef7ab7de837b364d2dc5a0b6fc0adbb14a189668b4cb48f647a82c831350097ca61fbf8f994cd51b89851e88ae9';
 
 /**
  * Genera un access token JWT de acceso usando el ID del usuario.
@@ -14,7 +13,7 @@ const REFRESH_TOKEN_SECRET = 'ae098dae4f4441ce311239b21964f9380c0345e407da836878
  * @returns {string} El token de acceso generado.
  */
 const getAccessToken = (userId) => {
-  return jwt.sign({ id: userId }, ACCESS_TOKEN_SECRET, { expiresIn: ACCESS_JWT_EXPIRATION });
+  return jwt.sign({ userId }, TOKEN_SECRET, { expiresIn: ACCESS_JWT_EXPIRATION });
 };
 /**
  * Genera un refresh token JWT de acceso usando el ID del usuario.
@@ -23,7 +22,7 @@ const getAccessToken = (userId) => {
  * @returns {string} El token de acceso generado.
  */
 const getRefreshToken = (userId) => {
-  return jwt.sign({ id: userId }, REFRESH_TOKEN_SECRET, { expiresIn: REFRESH_JWT_EXPIRATION });
+  return jwt.sign({ userId }, TOKEN_SECRET, { expiresIn: REFRESH_JWT_EXPIRATION });
 };
 
 /**
@@ -38,17 +37,18 @@ const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(403).json({ message: "Token requerido" });
+    return res.status(401).json({ message: "Token requerido" });
   }
 
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, SECRET_KEY);
-    req.user = decoded.id;
+    const decoded = jwt.verify(token, TOKEN_SECRET);
+    req.user = { userId: decoded.userId };
+
     next();
   } catch (error) {
-    res.status(403).json({ message: "Token inválido" });
+    res.status(401).json({ message: "Token inválido" });
   }
 };
 
@@ -66,13 +66,8 @@ const refreshToken = async (req, res) => {
   if (!token) return res.status(401).json({ message: 'Refresh Token no proporcionado' });
 
   try {
-    const decoded = jwt.verify(token, REFRESH_TOKEN_SECRET);
-
-    const accessToken = jwt.sign(
-      { userId: decoded.userId },
-      process.env.ACCESS_TOKEN_SECRET,
-      { expiresIn: ACCESS_JWT_EXPIRATION }
-    );
+    const decoded = jwt.verify(token, TOKEN_SECRET);
+    const accessToken = getAccessToken(decoded.userId);
 
     return res.json({ accessToken });
 
