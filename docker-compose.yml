@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend/carcatalog.db:/app/db/carcatalog.db
+    ports:
+      - "3001:3001"
+    command: sh -c "sqlite3 db/carcatalog.db < db/migrations/001_create_tables.sql && sqlite3 db/carcatalog.db < db/migrations/002_insert_roles.sql && node server.js"
+    environment:
+      - NODE_ENV=production
+      - TOKEN_SECRET=5136d81146236ef7674dbd337cb1ba0a17abb513824adba2c9b1f732a5be79dea9873619ec927c534b51bf8ddda920d740a2cca6f0f5d1f641b369273314ddfa
+      - ACCESS_JWT_EXPIRATION=30m
+      - REFRESH_JWT_EXPIRATION=1h
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
