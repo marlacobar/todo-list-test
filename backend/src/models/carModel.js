@@ -27,14 +27,19 @@ class UserModel {
     if (hasAdminRole) {
       // Retorna todos los autos
       return db.prepare(`
-        SELECT car_id, license_plate, brand, color, model, latitude, longitude 
-        FROM car`).all();
+        SELECT c.car_id, c.license_plate, c.brand, c.color, c.model,
+            c.latitude, c.longitude, u.username
+          FROM car c
+          INNER JOIN user_car uc ON uc.car_id = c.car_id
+          INNER JOIN user u ON u.user_id = uc.user_id`).all();
     } else {
       // Retorna solo autos del usuario
       return db.prepare(
-        `SELECT c.car_id, c.license_plate, c.brand, c.color, c.model, c.latitude, c.longitude
+        `SELECT c.car_id, c.license_plate, c.brand, c.color, c.model,
+            c.latitude, c.longitude, u.username
           FROM car c
           INNER JOIN user_car uc ON uc.car_id = c.car_id
+          INNER JOIN user u ON u.user_id = uc.user_id
           WHERE uc.user_id = ?`
       ).all(userId);
     }
