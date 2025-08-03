@@ -54,10 +54,29 @@ const Catalog = () => {
     return () => clearInterval(interval);
   }, []);
 
+  /**
+   * Maneja el cambio de los campos del formulario.
+   * 
+   * @async
+   * @function handleChange
+   * @param {Object} e - Evento de cambio del formulario.
+   * @param {string} e.target.name - Nombre del campo que cambió.
+   * 
+   * @returns {void} 
+   */
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  /**
+   * Maneja el envío del formulario para agregar o editar un automóvil.
+   * 
+   * @async
+   * @function handleSubmit
+   * @param {Object} e - Evento de envío del formulario.
+   * 
+   * @returns {Promise<void>}
+   * */
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -82,6 +101,22 @@ const Catalog = () => {
     }
   };
 
+  /**
+   * Maneja la edición de un automóvil.
+   * 
+   * @async
+   * @function handleEdit
+   * @param {Object} car - Objeto del automóvil a editar.
+   * @param {number} car.car_id - ID del automóvil.
+   * @param {string} car.license_plate - Placas del automóvil.
+   * @param {string} car.brand - Marca del automóvil.
+   * @param {string} car.model - Modelo del automóvil.
+   * @param {string} car.color - Color del automóvil.
+   * @param {number} car.latitude - Latitud del automóvil.
+   * @param {number} car.longitude - Longitud del automóvil.
+   *  
+   * @returns {void}
+   */
   const handleEdit = (car) => {
     setEditingCarId(car.car_id);
     setForm({
@@ -95,6 +130,15 @@ const Catalog = () => {
     setShowModal(true);
   };
 
+  /**
+   * Maneja la eliminación de un automóvil.
+   * 
+   * @async
+   * @function handleDelete
+   * @param {number} carId - ID del automóvil a eliminar.
+   * 
+   * @returns {Promise<void>}
+   */
   const handleDelete = async (carId) => {
     if (!window.confirm('¿Estás segura/o de eliminar este automóvil?')) return;
 
@@ -106,6 +150,14 @@ const Catalog = () => {
     }
   };
 
+  /**
+   * Maneja el cierre del modal de agregar/editar automóvil.
+   * 
+   * @async
+   * @function handleCloseModal
+   * 
+   * @return {void}
+   */
   const handleCloseModal = () => {
     setShowModal(false);
     setForm({
@@ -118,6 +170,18 @@ const Catalog = () => {
     });
   };
 
+  /**
+   * Maneja la apertura del modal para actualizar la posición de un automóvil.
+   * 
+   * @async
+   * @function handleOpenLocationModal
+   * @param {Object} car - Objeto del automóvil seleccionado.
+   * @param {number} car.car_id - ID del automóvil.
+   * @param {number} car.latitude - Latitud del automóvil.
+   * @param {number} car.longitude - Longitud del automóvil.
+   * 
+   * @return {void}
+   */
   const handleOpenLocationModal = (car) => {
     setSelectedCar(car);
     setLocationForm({
@@ -127,6 +191,15 @@ const Catalog = () => {
     setShowLocationModal(true);
   };
 
+  /** 
+   * Maneja el envío del formulario para actualizar la posición de un automóvil.
+   * 
+   * @async
+   * @function handleUpdateLocation
+   * @param {Object} e - Evento de envío del formulario.
+   * 
+   * @returns {Promise<void>}
+   */
   const handleUpdateLocation = async (e) => {
     e.preventDefault();
 
@@ -140,6 +213,16 @@ const Catalog = () => {
     }
   };
 
+  /** 
+   * Componente para ajustar los límites del mapa según las posiciones de los autos.
+   * 
+   * @async
+   * @function MapBounds
+   * @param {Object} props - Props del componente.
+   * @param {Array} props.cars - Lista de autos con sus posiciones.
+   * 
+   * @returns {null}
+   */
   function MapBounds({ cars }) {
     const map = useMap();
 
@@ -164,6 +247,14 @@ const Catalog = () => {
     return null;
   };
 
+  /**
+   * Maneja el cierre del modal de actualización de posición.
+   * 
+   * @async
+   * @function handleCloseLocationModal
+   * 
+   * @return {void}
+   */
   const handleCloseLocationModal = () => {
     setShowLocationModal(false);
     setSelectedCar(null);
