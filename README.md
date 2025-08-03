@@ -39,6 +39,18 @@ Acceder desde el navegador:
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:3001/api
 
+#### Migraciones
+
+Se aplican automáticamente al iniciar el backend.
+
+Archivos:
+
+- backend/db/migrations/001_create_tables.sql
+- backend/db/migrations/002_insert_roles.sql
+
+Si necesitas reiniciar la base de datos, elimina el archivo `backend/carcatalog.db` antes de volver a ejecutar `docker-compose up`.
+
+
 ### Alternativa: Ejecutar el proyecto sin Docker (modo local)
 
 Si prefieres probar el proyecto sin Docker (por ejemplo, durante desarrollo o para depurar), sigue estos pasos:
@@ -67,6 +79,14 @@ sqlite3 carcatalog.db < db/migrations/001_create_tables.sql
 sqlite3 carcatalog.db < db/migrations/002_insert_roles.sql
 ```
 
+Nota: Para ejecutar el backend localmente sin Docker, necesitas crear un archivo `.env` dentro de la carpeta `backend/` con el siguiente contenido:
+```
+NODE_ENV=production
+TOKEN_SECRET=5136d81146236ef7674dbd337cb1ba0a17abb513824adba2c9b1f732a5be79dea9873619ec927c534b51bf8ddda920d740a2cca6f0f5d1f641b369273314ddfa
+ACCESS_JWT_EXPIRATION=30m
+REFRESH_JWT_EXPIRATION=1h
+```
+
 Ejecuta el proyecto completo (frontend y backend) con un solo comando:
 
 ```sh
@@ -76,16 +96,6 @@ npm run dev
 El backend estará disponible en: `http://localhost:3001`
 El frontend estará disponible en: `http://localhost:5173`
 
-### Migraciones
-
-Se aplican automáticamente al iniciar el backend.
-
-Archivos:
-
-- backend/db/migrations/001_create_tables.sql
-- backend/db/migrations/002_insert_roles.sql
-
-Si necesitas reiniciar la base de datos, elimina el archivo `backend/carcatalog.db` antes de volver a ejecutar `docker-compose up`.
 
 ### Uso general
 
