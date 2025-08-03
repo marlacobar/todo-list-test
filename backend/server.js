@@ -1,8 +1,10 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const dotenv = require('dotenv');
 
 const app = express();
+dotenv.config({ path: './.env' });
 const PORT = process.env.PORT || 3001;
 
 const jwtRoute = require('./src/routes/jwtRoute');
