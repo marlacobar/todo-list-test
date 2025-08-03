@@ -24,11 +24,11 @@
   border-bottom: 1px solid #ccc;
 }
 
-/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
+  z-index: 1000;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.4);
@@ -87,4 +87,25 @@
 
 .delete-btn:hover {
   background-color: #a71d2a;
+}
+
+.location-btn {
+  margin-left: 0.5rem;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.6rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.location-btn:hover {
+  background-color: #535bf2;
+}
+
+#map {
+  width: 100%;
+  height: 450px;
+  margin-top: 3rem;
+  border-radius: 8px;
 }
