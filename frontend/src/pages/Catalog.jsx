@@ -316,7 +316,8 @@ const Catalog = () => {
             <Marker key={car.car_id} position={[car.latitude, car.longitude]}>
               <Popup>
                 <strong>{car.license_plate}</strong><br />
-                {car.brand} {car.model}
+                {car.brand} {car.model}<br />
+                <em>Usuario: {car.username}</em>
               </Popup>
             </Marker>
           ) : null
