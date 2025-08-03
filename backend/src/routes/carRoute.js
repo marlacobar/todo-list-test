@@ -6,6 +6,7 @@ const { verifyToken } = require('../services/authService/jwtService');
 router.get("/car", verifyToken, carController.selCarsByUserRol);
 router.post("/car", verifyToken, carController.insertCar);
 router.put("/car/:car_id", verifyToken, carController.updateCar);
+router.patch("/car/:car_id/position", verifyToken, carController.updCarPosition);
 router.delete("/car/:car_id", verifyToken, carController.deleteCar);
 
 module.exports = router;

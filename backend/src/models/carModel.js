@@ -3,7 +3,17 @@ const bcrypt = require('bcrypt')
 const db = require('../services/dbConfig')
 
 class UserModel {
-
+  /**
+   * Obtiene un listado de automóviles dependiendo del rol del usuario.
+   *
+   * @async
+   * @function selCarsByUserRol
+   * @param {string} userId - ID del usuario.
+   * 
+   * @returns {Promise<Array>} Retorna un arreglo de objetos con los automóviles del usuario 
+   * o todos si es admin.
+   * @throws {Error} Lanza un error si no se completa el proceso.
+   */
   async selCarsByUserRol(userId) {
     // Consulta si el usuario tiene el rol de admin
     const roles = db.prepare(
@@ -31,7 +41,7 @@ class UserModel {
   }
 
   /**
-   * Actualiza todos los datos de un automóvil especificado por car_id.
+   * Actualiza todos los datos de un automóvil especificado por `car_id`.
    *
    * @async
    * @function updateCar
@@ -86,6 +96,53 @@ class UserModel {
       });
 
       return { success: true, message: 'Automóvil actualizado con éxito' };
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  /**
+   * Actualiza la latitud y longitud de un automóvil especificado por `car_id`.
+   *
+   * @async
+   * @function updCarPosition
+   * @param {string} car_id - Id del automóvil.
+   * @param {string} latitude - Latitud del automóvil.
+   * @param {string} longitude - Longitud del automóvil.
+   * @returns {Promise<Object>} Retorna un objeto con `success` y `message` si se actualiza el automóvil.
+   * 
+   * @throws {Error} Lanza un error si no se completa el proceso.
+   */
+  async updCarPosition(car_id, latitude, longitude) {
+    try {
+      if (!car_id) {
+        const err = new Error('El ID del automóvil es requerido.');
+        err.code = 400;
+        throw err;
+      }
+
+      const existing = db.prepare('SELECT * FROM car WHERE car_id = @car_id')
+        .get({ car_id });
+
+      if (!existing) {
+        const err = new Error('El automóvil no existe.');
+        err.code = 404;
+        throw err;
+      }
+
+      const updateCar = db.prepare(
+        `UPDATE car
+          SET latitude = @latitude,
+            longitude = @longitude
+          WHERE car_id = @car_id`
+      );
+      updateCar.run({
+        latitude, longitude,
+        car_id
+      });
+
+      return { success: true, message: 'Posición del automóvil actualizada' };
     } catch (error) {
       console.error(error);
       throw error;
@@ -157,7 +214,7 @@ class UserModel {
   }
 
   /**
-   * Elimina un automóvil especificado por car_id.
+   * Elimina un automóvil especificado por `car_id`.
    * Elimina también la relación con el usuario.
    *
    * @async

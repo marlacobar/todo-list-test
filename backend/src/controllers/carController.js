@@ -64,6 +64,27 @@ module.exports = {
   },
 
   /**
+   * Actualiza la latitud y longitud de un automóvil.
+   *
+   * @async
+   * @function updCarPosition
+   * @param {import('express').Request} req Objeto de solicitud HTTP, con el cuerpo que contiene los datos del automóvil.
+   * @param {import('express').Response} res Objeto de respuesta HTTP.
+   * @returns {Promise<void>}
+   */
+  updCarPosition: async (req, res) => {
+    try {
+      const { car_id } = req.params;
+      const { latitude, longitude } = req.body;
+
+      const result = await carModel.updCarPosition(car_id, latitude, longitude);
+      res.status(201).json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+
+  /**
    * Eliminar un automóvil.
    *
    * @async
