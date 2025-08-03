@@ -28,7 +28,6 @@ function Login() {
 
     try {
       const response = await login(username, password);
-      console.log('Login response:', response.data);
       toast.success('Inicio exitosamente.');
       setUsername('');
       setPassword('');

@@ -32,8 +32,7 @@ function Register() {
     }
 
     try {
-      const response = await register(username, password, role);
-      console.log(response.data);
+      await register(username, password, role);
       toast.success('Usuario creado exitosamente. Ahora puedes iniciar sesión.');
       setUsername('');
       setPassword('');

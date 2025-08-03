@@ -2,10 +2,22 @@ import '../styles/Catalog.css'
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast'
 
 import axios from '../services/apiInstance';
+
+delete L.Icon.Default.prototype._getIconUrl;
+
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow,
+});
 
 
 const Catalog = () => {
@@ -35,7 +47,7 @@ const Catalog = () => {
       const res = await axios.get('/car');
       setCars(res.data);
     } catch (err) {
-      console.error(err);
+      toast.error(err.response?.data?.error || 'Error al obtener autos');
     }
   };
 
@@ -83,7 +95,8 @@ const Catalog = () => {
       if (editingCarId) {
         await axios.put(`/car/${editingCarId}`, form);
       } else {
-        await axios.post('/car', form);
+        const response = await axios.post('/car', form);
+        console.log('Car added:', response.data);
       }
 
       setShowModal(false);
@@ -97,7 +110,7 @@ const Catalog = () => {
       });
       fetchCars();
     } catch (err) {
-      console.error(err);
+      toast.error(err.response?.data?.error || 'Error al crear automóvil');
     }
   };
 
@@ -146,7 +159,7 @@ const Catalog = () => {
       await axios.delete(`/car/${carId}`);
       fetchCars();
     } catch (err) {
-      console.error('Error al eliminar:', err);
+      toast.error(err.response?.data?.error || 'Error al eliminar automóvil');
     }
   };
 
@@ -209,7 +222,7 @@ const Catalog = () => {
       handleCloseLocationModal();
 
     } catch (err) {
-      console.error('Error al actualizar posición:', err);
+      toast.error(err.response?.data?.error || 'Error al actualizar posición');
     }
   };
 
