@@ -1,10 +1,8 @@
 const jwt = require('jsonwebtoken');
 
-// const SECRET_KEY = process.env.JWT_SECRET;
-// const JWT_EXPIRATION = process.env.JWT_EXPIRATION;
-const ACCESS_JWT_EXPIRATION = '15m';
-const REFRESH_JWT_EXPIRATION = '1h';
-const TOKEN_SECRET = 'b853065d2cea733efee3cff1865985778760bef7ab7de837b364d2dc5a0b6fc0adbb14a189668b4cb48f647a82c831350097ca61fbf8f994cd51b89851e88ae9';
+const ACCESS_JWT_EXPIRATION = process.env.ACCESS_JWT_EXPIRATION;
+const REFRESH_JWT_EXPIRATION = process.env.REFRESH_JWT_EXPIRATION;
+const TOKEN_SECRET = process.env.TOKEN_SECRET;
 
 /**
  * Genera un access token JWT de acceso usando el ID del usuario.

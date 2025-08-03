@@ -43,7 +43,7 @@ module.exports = {
         httpOnly: false,
         secure: false,
         sameSite: 'lax',
-        maxAge: ms('1h'),
+        maxAge: ms(process.env.REFRESH_JWT_EXPIRATION || '1h'),
         path: '/'
       });
 

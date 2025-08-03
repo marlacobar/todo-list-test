@@ -34,8 +34,6 @@ class UserModel {
       const existing = db.prepare('SELECT * FROM user WHERE username = @username')
         .get({ username });
 
-      console.log('existing', existing);
-
       if (existing) {
         const err = new Error('El usuario ya existe.');
         err.code = 409;

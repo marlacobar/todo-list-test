@@ -1,5 +1,3 @@
-const bcrypt = require('bcrypt')
-
 const db = require('../services/dbConfig')
 
 class UserModel {
