@@ -4,7 +4,6 @@ import { Toaster } from 'react-hot-toast';
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Catalog from './pages/Catalog'
-import Map from './pages/Map'
 
 
 function App() {
@@ -18,7 +17,6 @@ function App() {
           <Route path="/" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/catalog" element={<Catalog />} />
-          <Route path="/map" element={<Map />} />
         </Routes>
       </Router>
     </div>
