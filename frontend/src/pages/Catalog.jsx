@@ -264,9 +264,31 @@ const Catalog = () => {
     });
   };
 
+  /**
+   * Maneja el cierre de sesión del usuario.
+   * 
+   * @async
+   * @function handleLogout
+   * 
+   * @returns {Promise<void>}
+   */
+  const handleLogout = async () => {
+    try {
+      await axios.post('/auth/logout');
+      sessionStorage.removeItem('accessToken');
+      navigate('/');
+    } catch (err) {
+      console.error('Error al cerrar sesión:', err);
+    }
+  };
+
 
   return (
     <div className='catalog-container'>
+      <div className="top-bar">
+        <button className="logout-btn" onClick={handleLogout}>Cerrar sesión</button>
+      </div>
+
       <h2>Catálogo de Autos</h2>
       <button onClick={() => setShowModal(true)} className='add-btn'>
         Agregar auto
